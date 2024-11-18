@@ -1,14 +1,38 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# DoneIt - A Minimal To-Do App 📝
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+DoneIt is a simple and minimal to-do app built using Compose Multiplatform. It is designed to work seamlessly on both Android and iOS devices. The app focuses on providing an intuitive user experience for managing tasks.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+## Features ✨
 
+- **Cross-Platform Support**: Available on both Android 📱 and iOS 🍏.
+- **Local Data Storage**: Utilizes Realm Database for local data management 💾.
+- **State Management**: Uses Voyager for ViewModel and navigation 🚀.
+- **Minimal Design**: Focuses on a clean and simple user interface for task management 🎨.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+## Tech Stack ⚙️
+
+- **Compose Multiplatform**: For building the UI on both Android and iOS.
+- **Realm Database**: For local data storage and management.
+- **Voyager**: For handling ViewModel and navigation.
+
+## Setup & Installation 🛠️
+
+### Prerequisites 📥
+
+- Android Studio or Xcode (for iOS)
+- Kotlin and Compose Multiplatform support enabled in the IDE
+
+### Steps 📋
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Mahmud0808/DoneIt.git
+   ```
+
+2. Open the project in Android Studio or Xcode.
+3. Sync the dependencies.
+4. Run the app on an emulator or a physical device.
+
+## Contribution 🤝
+
+This project is intended for personal learning and experimentation with Compose Multiplatform. Contributions are welcome, but please note that it is not intended for production use.
