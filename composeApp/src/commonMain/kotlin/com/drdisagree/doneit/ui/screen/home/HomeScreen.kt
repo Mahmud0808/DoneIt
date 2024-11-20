@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,7 +40,12 @@ import com.drdisagree.doneit.domain.ToDoTask
 import com.drdisagree.doneit.ui.components.ErrorScreen
 import com.drdisagree.doneit.ui.components.LoadingScreen
 import com.drdisagree.doneit.ui.components.TaskView
+import com.drdisagree.doneit.ui.components.bottomFadingEdge
+import com.drdisagree.doneit.ui.components.topFadingEdge
 import com.drdisagree.doneit.ui.screen.task.TaskScreen
+import doneit.composeapp.generated.resources.Res
+import doneit.composeapp.generated.resources.app_name
+import org.jetbrains.compose.resources.stringResource
 
 class HomeScreen : Screen {
 
@@ -56,9 +62,12 @@ class HomeScreen : Screen {
                 CenterAlignedTopAppBar(
                     title = {
                         Text(
-                            text = "Home"
+                            text = stringResource(Res.string.app_name)
                         )
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
                 )
             },
             floatingActionButton = {
@@ -128,6 +137,61 @@ fun DisplayTasks(
     var showDialog by remember { mutableStateOf(false) }
     var taskToDelete: ToDoTask? by remember { mutableStateOf(null) }
 
+    Column(
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            text = if (showActive) "Active Tasks" else "Completed Tasks",
+            fontSize = MaterialTheme.typography.titleMedium.fontSize,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        tasks.DisplayResult(
+            onLoading = { LoadingScreen() },
+            onError = { ErrorScreen(message = it) },
+            onSuccess = {
+                if (it.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .topFadingEdge(color = MaterialTheme.colorScheme.surface)
+                            .bottomFadingEdge(color = MaterialTheme.colorScheme.surface)
+                            .padding(horizontal = 24.dp)
+                    ) {
+                        items(
+                            items = it,
+                            key = { task -> task._id.toHexString() }
+                        ) { task ->
+                            TaskView(
+                                task = task,
+                                showActive = showActive,
+                                onSelect = { onSelect?.invoke(task) },
+                                onComplete = { selectedTask, completed ->
+                                    onComplete?.invoke(
+                                        selectedTask,
+                                        completed
+                                    )
+                                },
+                                onFavorite = { selectedTask, favorite ->
+                                    onFavorite?.invoke(
+                                        selectedTask,
+                                        favorite
+                                    )
+                                },
+                                onDelete = { selectedTask ->
+                                    taskToDelete = selectedTask
+                                    showDialog = true
+                                }
+                            )
+                        }
+                    }
+                } else {
+                    ErrorScreen(message = "No tasks found")
+                }
+            }
+        )
+    }
+
     if (showDialog) {
         AlertDialog(
             title = {
@@ -166,58 +230,6 @@ fun DisplayTasks(
             onDismissRequest = {
                 taskToDelete = null
                 showDialog = false
-            }
-        )
-    }
-
-    Column(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = if (showActive) "Active Tasks" else "Completed Tasks",
-            fontSize = MaterialTheme.typography.titleMedium.fontSize,
-            fontWeight = FontWeight.Bold
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        tasks.DisplayResult(
-            onLoading = { LoadingScreen() },
-            onError = { ErrorScreen(message = it) },
-            onSuccess = {
-                if (it.isNotEmpty()) {
-                    LazyColumn(
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    ) {
-                        items(
-                            items = it,
-                            key = { task -> task._id.toHexString() }
-                        ) { task ->
-                            TaskView(
-                                task = task,
-                                showActive = showActive,
-                                onSelect = { onSelect?.invoke(task) },
-                                onComplete = { selectedTask, completed ->
-                                    onComplete?.invoke(
-                                        selectedTask,
-                                        completed
-                                    )
-                                },
-                                onFavorite = { selectedTask, favorite ->
-                                    onFavorite?.invoke(
-                                        selectedTask,
-                                        favorite
-                                    )
-                                },
-                                onDelete = { selectedTask ->
-                                    taskToDelete = selectedTask
-                                    showDialog = true
-                                }
-                            )
-                        }
-                    }
-                } else {
-                    ErrorScreen(message = "No tasks found")
-                }
             }
         )
     }

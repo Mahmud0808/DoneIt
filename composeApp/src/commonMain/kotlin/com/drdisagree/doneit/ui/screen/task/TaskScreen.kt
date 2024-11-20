@@ -18,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -93,7 +94,10 @@ data class TaskScreen(val task: ToDoTask? = null) : Screen {
                                 contentDescription = "Back"
                             )
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceContainer
+                    )
                 )
             },
             floatingActionButton = {
@@ -152,7 +156,7 @@ data class TaskScreen(val task: ToDoTask? = null) : Screen {
                         interactionSource = descriptionInteractionSource,
                         placeholder = {
                             Text(
-                                text = "Enter task description",
+                                text = "Enter task description...",
                                 fontSize = MaterialTheme.typography.titleMedium.fontSize,
                                 modifier = Modifier.alpha(0.5f)
                             )
